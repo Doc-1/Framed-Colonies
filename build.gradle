@@ -141,16 +141,12 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation ("com.ldtteam:structurize:${structurize_version}"){
-        transitive = false
-    }
-    implementation ("com.ldtteam:minecolonies:${minecolonies_version}"){
-        transitive = false
-    }
+    implementation("com.ldtteam:structurize:${structurize_version}")
+    implementation("com.ldtteam:minecolonies:${minecolonies_version}")
     implementation "curse.maven:framedblocks-441647:6872949"
 
-    runtimeOnly ("com.ldtteam:blockui:${blockui_version}")
-    implementation ("com.ldtteam:domum-ornamentum:${domum_ornamentum_version}")
+    implementation("com.ldtteam:blockui:${blockui_version}")
+    implementation("com.ldtteam:domum-ornamentum:${domum_ornamentum_version}")
 
 }
 
