@@ -1,6 +1,8 @@
 package com.docvin.framedcolonies.handler.placement;
 
 import com.ldtteam.common.util.BlockToItemHelper;
+import com.ldtteam.structurize.api.RotationMirror;
+import com.ldtteam.structurize.blueprints.v1.Blueprint;
 import com.ldtteam.structurize.placement.handlers.placement.IPlacementHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -10,22 +12,49 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.common.block.FramedBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ldtteam.structurize.api.constants.Constants.UPDATE_FLAG;
+import static com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers.handleTileEntityPlacement;
 
 public class FrameBlockPlacementHandler implements IPlacementHandler {
 
     @Override
     public boolean canHandle(Level level, BlockPos blockPos, BlockState blockState) {
-        return level.getBlockEntity(blockPos) instanceof FramedBlockEntity;
+        return blockState.getBlock() instanceof FramedBlock;
+    }
+
+    @Override
+    public ActionProcessingResult handle(Blueprint blueprint, Level world, BlockPos pos, BlockState blockState, @Nullable CompoundTag tileEntityData, boolean complete, BlockPos centerPos, RotationMirror settings) {
+        if (world.getBlockState(pos).equals(blockState)) {
+            world.removeBlock(pos, false);
+            world.setBlock(pos, blockState, UPDATE_FLAG);
+            if (tileEntityData != null) {
+                handleTileEntityPlacement(tileEntityData, world, pos, settings);
+            }
+            return ActionProcessingResult.PASS;
+        }
+
+        if (!world.setBlock(pos, blockState, UPDATE_FLAG)) {
+            return ActionProcessingResult.DENY;
+        }
+
+        if (tileEntityData != null) {
+            handleTileEntityPlacement(tileEntityData, world, pos, settings);
+        }
+
+        return ActionProcessingResult.SUCCESS;
     }
 
     @Override
     public List<ItemStack> getRequiredItems(Level level, BlockPos blockPos, BlockState blockState, @Nullable CompoundTag compoundTag, boolean b) {
         final List<ItemStack> itemList = new ArrayList<>();
         itemList.add(new ItemStack(BlockToItemHelper.getItem(blockState)));
-
+        System.out.println(blockState);
+        System.out.println(compoundTag);
         if (level.getBlockEntity(blockPos) instanceof FramedBlockEntity be)
             be.addAdditionalDrops(itemList, ConfigView.Server.INSTANCE.shouldConsumeCamoItem());
 

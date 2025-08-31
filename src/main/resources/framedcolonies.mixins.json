@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.docvin.framedcolonies.mixins",
+  "compatibilityLevel": "JAVA_13",
+  "refmap": "framedcolonies.refmap.json",
+  "mixins": [
+    "BlockBehaviourMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}
