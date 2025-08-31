@@ -10,7 +10,7 @@ public class RotationMirrorHandlers {
     public static final List<IRotationMirrorHandler> handlers = new ArrayList<>();
 
     static {
-        handlers.add(new FramedAdjustableDoubleBlockRotationHandler());
+        handlers.add(new FramedAdjustableDoublePanelBlockRotationHandler());
     }
 
     /**

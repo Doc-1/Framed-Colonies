@@ -4,21 +4,22 @@ import com.ldtteam.structurize.api.RotationMirror;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.common.block.slab.FramedAdjustableDoubleBlock;
+import xfacthd.framedblocks.common.block.slab.FramedAdjustableDoublePanelBlock;
 
-public class FramedAdjustableDoubleBlockRotationHandler implements IRotationMirrorHandler {
+public class FramedAdjustableDoublePanelBlockRotationHandler implements IRotationMirrorHandler {
 
 
     @Override
     public boolean canHandle(BlockState blockState) {
-        return blockState.getBlock() instanceof FramedAdjustableDoubleBlock;
+        return blockState.getBlock() instanceof FramedAdjustableDoublePanelBlock;
     }
 
     @Override
     public BlockState handleRotationMirror(BlockState blockState, RotationMirror settings) {
-        FramedAdjustableDoubleBlock block = (FramedAdjustableDoubleBlock) blockState.getBlock();
+        FramedAdjustableDoublePanelBlock block = (FramedAdjustableDoublePanelBlock) blockState.getBlock();
         Direction direction = blockState.getValue(FramedProperties.FACING_HOR);
         direction = settings.rotation().rotate(direction);
+        direction = settings.mirror().mirror(direction);
         System.out.println(block.getFacing(blockState) + " " + settings);
         return blockState.setValue(FramedProperties.FACING_HOR, direction);
     }

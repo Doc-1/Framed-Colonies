@@ -24,4 +24,14 @@ public abstract class BlockBehaviourMixin {
             }
         }
     }
+
+    @Inject(at = @At("HEAD"), method = "mirror", cancellable = true)
+    protected void mirror(BlockState state, Mirror mirror, CallbackInfoReturnable<BlockState> callbackInfoReturnable) {
+        if (!mirror.equals(Mirror.NONE)) {
+            IRotationMirrorHandler rotationHandler = RotationMirrorHandlers.getHandler(state);
+            if (rotationHandler != null && rotationHandler.canHandle(state)) {
+                callbackInfoReturnable.setReturnValue(rotationHandler.handleRotationMirror(state, RotationMirror.of(Rotation.NONE, mirror)));
+            }
+        }
+    }
 }
