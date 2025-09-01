@@ -28,22 +28,24 @@ public class FrameBlockPlacementHandler implements IPlacementHandler {
     }
 
     @Override
-    public ActionProcessingResult handle(Blueprint blueprint, Level world, BlockPos pos, BlockState blockState, @Nullable CompoundTag tileEntityData, boolean complete, BlockPos centerPos, RotationMirror settings) {
-        if (world.getBlockState(pos).equals(blockState)) {
-            world.removeBlock(pos, false);
-            world.setBlock(pos, blockState, UPDATE_FLAG);
+    public ActionProcessingResult handle(Blueprint blueprint, Level level, BlockPos pos, BlockState blockState, @Nullable CompoundTag tileEntityData, boolean complete, BlockPos centerPos, RotationMirror settings) {
+
+
+        if (level.getBlockState(pos).equals(blockState)) {
+            level.removeBlock(pos, false);
+            level.setBlock(pos, blockState, UPDATE_FLAG);
             if (tileEntityData != null) {
-                handleTileEntityPlacement(tileEntityData, world, pos, settings);
+                handleTileEntityPlacement(tileEntityData, level, pos, settings);
             }
             return ActionProcessingResult.PASS;
         }
 
-        if (!world.setBlock(pos, blockState, UPDATE_FLAG)) {
+        if (!level.setBlock(pos, blockState, UPDATE_FLAG)) {
             return ActionProcessingResult.DENY;
         }
 
         if (tileEntityData != null) {
-            handleTileEntityPlacement(tileEntityData, world, pos, settings);
+            handleTileEntityPlacement(tileEntityData, level, pos, settings);
         }
 
         return ActionProcessingResult.SUCCESS;
@@ -53,8 +55,6 @@ public class FrameBlockPlacementHandler implements IPlacementHandler {
     public List<ItemStack> getRequiredItems(Level level, BlockPos blockPos, BlockState blockState, @Nullable CompoundTag compoundTag, boolean b) {
         final List<ItemStack> itemList = new ArrayList<>();
         itemList.add(new ItemStack(BlockToItemHelper.getItem(blockState)));
-        System.out.println(blockState);
-        System.out.println(compoundTag);
         if (level.getBlockEntity(blockPos) instanceof FramedBlockEntity be)
             be.addAdditionalDrops(itemList, ConfigView.Server.INSTANCE.shouldConsumeCamoItem());
 

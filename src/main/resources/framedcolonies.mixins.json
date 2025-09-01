@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_13",
   "refmap": "framedcolonies.refmap.json",
   "mixins": [
-    "BlockBehaviourMixin"
+    "BlockBehaviourMixin",
+    "BlockUtilsMixin",
+    "BlueprintMixin"
   ],
   "client": [
   ],

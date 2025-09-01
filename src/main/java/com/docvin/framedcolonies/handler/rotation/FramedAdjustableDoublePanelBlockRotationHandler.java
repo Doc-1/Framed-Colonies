@@ -21,6 +21,8 @@ public class FramedAdjustableDoublePanelBlockRotationHandler implements IRotatio
         direction = settings.rotation().rotate(direction);
         direction = settings.mirror().mirror(direction);
         System.out.println(block.getFacing(blockState) + " " + settings);
+
+
         return blockState.setValue(FramedProperties.FACING_HOR, direction);
     }
 }
