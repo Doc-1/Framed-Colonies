@@ -1,5 +1,6 @@
 package com.docvin.framedcolonies.mixins;
 
+import com.docvin.framedcolonies.handler.rotation.RotationMirrorHandlers;
 import com.ldtteam.structurize.api.BlockPosUtil;
 import com.ldtteam.structurize.api.Log;
 import com.ldtteam.structurize.api.RotationMirror;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
@@ -29,8 +29,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xfacthd.framedblocks.api.camo.block.AbstractBlockCamoContainer;
-import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
 import java.util.*;
 
@@ -171,29 +169,7 @@ public abstract class BlueprintMixin {
                             BlockEntityTagSubstitution.serializeReplacement(compound, dynamicNbtOps, replacement);
                         }
 
-                        if (BlockEntity.loadStatic(tempPos, state, compound, level.registryAccess()) instanceof FramedDoubleBlockEntity framedBlockEntity) {
-                            framedBlockEntity.setLevel(level);
-
-                            System.out.println(compound);
-                            System.out.println(framedBlockEntity.saveCustomOnly(level.registryAccess()));
-                            AbstractBlockCamoContainer<?> newCamo = (AbstractBlockCamoContainer<?>) framedBlockEntity.getCamo();
-                            AbstractBlockCamoContainer<?> newCamo2 = (AbstractBlockCamoContainer<?>) framedBlockEntity.getCamoTwo();
-                            if (newCamo != null && newCamo.canRotateCamo()) {
-
-                                AbstractBlockCamoContainer<?> camoRot = newCamo.copyWithState(newCamo.getState().rotate(transformBy.rotation()));
-                                framedBlockEntity.setCamo(camoRot, false);
-                            }
-                            if (newCamo2 != null && newCamo2.canRotateCamo()) {
-                                AbstractBlockCamoContainer<?> camoRot = newCamo2.copyWithState(newCamo2.getState().rotate(transformBy.rotation()));
-                                framedBlockEntity.setCamo(camoRot, true);
-                            }
-
-                            CompoundTag tag = framedBlockEntity.saveCustomOnly(level.registryAccess());
-                            if (tag.get("camo") instanceof CompoundTag camoTag)
-                                compound.put("camo", camoTag);
-                            if (tag.get("camo_two") instanceof CompoundTag camoTag)
-                                compound.put("camo_two", camoTag);
-                        }
+                        RotationMirrorHandlers.rotateCamo(tempPos, state, compound, level, transformBy);
 
                         if (compound.contains(TAG_BLUEPRINTDATA)) {
                             CompoundTag dataCompound = compound.getCompound(TAG_BLUEPRINTDATA);
