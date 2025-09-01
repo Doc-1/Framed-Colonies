@@ -1,5 +1,6 @@
 package com.docvin.framedcolonies.handler.placement;
 
+import com.docvin.framedcolonies.handler.rotation.RotationMirrorHandlers;
 import com.ldtteam.common.util.BlockToItemHelper;
 import com.ldtteam.structurize.api.RotationMirror;
 import com.ldtteam.structurize.blueprints.v1.Blueprint;
@@ -30,11 +31,11 @@ public class FrameBlockPlacementHandler implements IPlacementHandler {
     @Override
     public ActionProcessingResult handle(Blueprint blueprint, Level level, BlockPos pos, BlockState blockState, @Nullable CompoundTag tileEntityData, boolean complete, BlockPos centerPos, RotationMirror settings) {
 
-
         if (level.getBlockState(pos).equals(blockState)) {
             level.removeBlock(pos, false);
             level.setBlock(pos, blockState, UPDATE_FLAG);
             if (tileEntityData != null) {
+                RotationMirrorHandlers.rotateCamo(pos, blockState, tileEntityData, level, settings);
                 handleTileEntityPlacement(tileEntityData, level, pos, settings);
             }
             return ActionProcessingResult.PASS;
@@ -45,6 +46,7 @@ public class FrameBlockPlacementHandler implements IPlacementHandler {
         }
 
         if (tileEntityData != null) {
+            RotationMirrorHandlers.rotateCamo(pos, blockState, tileEntityData, level, settings);
             handleTileEntityPlacement(tileEntityData, level, pos, settings);
         }
 

@@ -10,32 +10,8 @@ import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.block.AbstractBlockCamoContainer;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RotationMirrorHandlers {
 
-    public static final List<IRotationMirrorHandler> handlers = new ArrayList<>();
-
-    static {
-        handlers.add(new FramedAdjustableDoublePanelBlockRotationHandler());
-    }
-
-    /**
-     * Finds the appropriate {@link IRotationMirrorHandler} for the given location.
-     *
-     * @param newState the blockstate being rotated or mirroed.
-     * @return the appropriate handler if one exists.
-     */
-    public static IRotationMirrorHandler getHandler(final BlockState newState) {
-        for (final IRotationMirrorHandler rotationMirrorHandler : handlers) {
-            if (rotationMirrorHandler.canHandle(newState)) {
-                return rotationMirrorHandler;
-            }
-        }
-
-        return null;
-    }
 
     public static void rotateCamo(BlockPos pos, BlockState state, final CompoundTag compound, Level level, RotationMirror transformBy) {
         if (BlockEntity.loadStatic(pos, state, compound, level.registryAccess()) instanceof FramedBlockEntity framedBlockEntity) {
@@ -45,7 +21,7 @@ public class RotationMirrorHandlers {
 
             if (framedBlockEntity instanceof FramedDoubleBlockEntity framedDoubleBlockEntity)
                 newCamo2 = (AbstractBlockCamoContainer<?>) framedDoubleBlockEntity.getCamoTwo();
-            
+
             if (newCamo != null && rotate(newCamo, framedBlockEntity, transformBy, level, false).get("camo") instanceof CompoundTag camoTag)
                 compound.put("camo", camoTag);
             if (newCamo2 != null && rotate(newCamo2, framedBlockEntity, transformBy, level, true).get("camo_two") instanceof CompoundTag camoTag)
