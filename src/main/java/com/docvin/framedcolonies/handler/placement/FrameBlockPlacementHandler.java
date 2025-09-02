@@ -31,6 +31,8 @@ public class FrameBlockPlacementHandler implements IPlacementHandler {
     @Override
     public ActionProcessingResult handle(Blueprint blueprint, Level level, BlockPos pos, BlockState blockState, @Nullable CompoundTag tileEntityData, boolean complete, BlockPos centerPos, RotationMirror settings) {
 
+        blockState = RotationMirrorHandlers.rotateDoublePanel(blockState, settings);
+
         if (level.getBlockState(pos).equals(blockState)) {
             level.removeBlock(pos, false);
             level.setBlock(pos, blockState, UPDATE_FLAG);

@@ -2,12 +2,15 @@ package com.docvin.framedcolonies.handler.rotation;
 
 import com.ldtteam.structurize.api.RotationMirror;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.block.AbstractBlockCamoContainer;
+import xfacthd.framedblocks.common.block.slab.FramedAdjustableDoublePanelBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
 public class RotationMirrorHandlers {
@@ -27,6 +30,18 @@ public class RotationMirrorHandlers {
             if (newCamo2 != null && rotate(newCamo2, framedBlockEntity, transformBy, level, true).get("camo_two") instanceof CompoundTag camoTag)
                 compound.put("camo_two", camoTag);
         }
+    }
+
+    public static BlockState rotateDoublePanel(BlockState blockState, RotationMirror settings) {
+        if (blockState.getBlock() instanceof FramedAdjustableDoublePanelBlock block) {
+
+            Direction direction = blockState.getValue(FramedProperties.FACING_HOR);
+            direction = settings.rotation().rotate(direction);
+            direction = settings.mirror().mirror(direction);
+            return blockState.setValue(FramedProperties.FACING_HOR, direction);
+
+        }
+        return blockState;
     }
 
     private static CompoundTag rotate(AbstractBlockCamoContainer<?> newCamo, final FramedBlockEntity framedBlockEntity, RotationMirror transformBy, Level level, boolean secondary) {
